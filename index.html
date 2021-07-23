@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="reset.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <style>
+        body{
+            background: #eee;
+        }
+        #wrapper{
+            /* padding: 1em 0em; */
+            padding-top: 2em;
+            position: relative;
+            width: 755px;
+            /* height: 842px; */
+            margin: auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            background: white;
+        }
+
+        .box{
+            position: relative;
+            width: 48.5%;
+            height: 310px;
+            border: 3.5px solid #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            margin-bottom: 32px;
+            padding: 1.5em 0;
+            box-sizing: border-box;
+        }
+
+        .box:before{
+            content: '30 seconds';
+            font-size: 0.8em;
+            position: absolute;
+            top: -0.86em;
+            left: 50%;
+            transform: translateX(-50%);
+            margin: auto;
+            padding: 0.3em 1.2em;
+            background-color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        span{
+            font-size: 1.5em;
+            margin: 0.3em 0;
+        }
+
+        .box:nth-child(7), .box:nth-child(8),
+        .box:nth-child(13), .box:nth-child(14),
+        .box:nth-child(19), .box:nth-child(20),
+        .box:nth-child(25), .box:nth-child(26){
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrapper"></div>
+
+    <script>
+        var wrapper = $("#wrapper");
+        $.get('words.json', words => {
+            Object.values(words).forEach((item, i) => {
+                var box = $('<div class="box"></div>');
+                var tpl = '';
+                item.forEach((word) => {
+                    tpl += `<span class="${word.played ? 'played' : ''}">${word.word}</span>`;
+                });
+
+                box.html(tpl);
+
+                wrapper.append(box);
+            })
+        });
+        // function shuffle(array) {
+        //     return array.sort(() => Math.random() - 0.5);
+        // }
+
+        // var array = [];
+        // $.get('words.txt', words => {
+        //     var wordsArray = words.split('\n');
+        //     for(var i = 0; i < wordsArray.length; i++){
+        //         array.push(wordsArray[i]);
+        //     }
+
+        //     array = shuffle(array);
+
+        //     var arrays = {}, size = 5;
+
+        //     while (array.length > 0)
+        //         arrays[array.length] = array.splice(0, size);
+
+        //     document.write(JSON.stringify(arrays));
+        // })
+    </script>
+</body>
+</html>

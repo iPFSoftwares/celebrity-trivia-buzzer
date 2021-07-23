@@ -1,0 +1,12 @@
+#Slide{
+    background: #fff;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#Slide.moved{
+    transition: transform 0.1s ease-out;
+}

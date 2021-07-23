@@ -1,0 +1,108 @@
+@font-face{
+  font-family: 'OpenSans';
+  src: url('fonts/OpenSans-SemiBold.ttf');
+  font-weight: bold;
+}
+
+@font-face{
+  font-family: 'OpenSans';
+  src: url('fonts/OpenSans-Italic.ttf');
+  font-style: italic;
+}
+
+@font-face{
+  font-family: 'OpenSans';
+  src: url('fonts/OpenSans-Regular.ttf');
+}
+
+body { font-family: 'OpenSans', verdana, sans-serif; }
+
+h1, h2, h3 {
+  font-family: 'Yanone Kaffeesatz', sans-serif;
+  font-weight: normal;
+}
+
+h1.played{
+  text-decoration: line-through;
+}
+
+#boards{
+  box-sizing: border-box;
+  margin-top: 1em;
+  width: calc(100vw - 250px - 8.5em);
+  max-width: 800px;
+  margin-left: calc((100vw - 250px - 8.5em - 800px) / 2);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+#boards .info-board{
+  box-sizing: border-box;
+  width: calc(50% - 1em - 4px);
+  margin-right: 1em;
+  margin-bottom: 1em;
+  padding-bottom: 3em;
+  justify-content: flex-start;
+}
+
+.info-board > h1:first-child{
+  border-bottom: 1px solid #ddd;
+  padding: 0.25em;
+}
+
+#words.info-board{
+  text-align: center;
+  width: calc(100% - 0.5em - 4px);
+}
+
+#actions button{
+  font-size: 1.1em;
+  padding: 0.7em 1.5em;
+  border-radius: 50px;
+  outline: none;
+}
+
+.info-board{
+  border: 2px solid #888;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1em 3em;
+}
+
+.info-board h5{
+  font-family: 'Yanone Kaffeesatz';
+  font-weight: normal;
+  font-size: 2.2em;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5em;
+  margin-top: 0;
+}
+
+#qrCodeViewer.visible{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#qrCodeViewer > div{
+  /* width: 350px;
+  height: 400px; */
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  background: #fff;
+}
+
+#qrCode{
+  width: 250px;
+  height: 250px;
+  margin-bottom: 1.3em;
+}
+
+@media all and (max-width: 1200px){
+  #boards{
+    margin-left: 0.5em;
+  }
+}

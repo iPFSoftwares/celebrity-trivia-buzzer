@@ -1,0 +1,28 @@
+{
+  "name": "web-slides",
+  "version": "0.0.1",
+  "description": "Markdown based slides, with ability to connect to a phone as web-slides-clicker.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "generate": "node generate-words.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jestrux/web-slides.git"
+  },
+  "keywords": [
+    "slideshow"
+  ],
+  "author": "Walter Kimaro",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jestrux/web-slides/issues"
+  },
+  "homepage": "https://github.com/jestrux/web-slides#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "marked": "^0.5.1",
+    "socket.io": "^2.1.1"
+  }
+}

@@ -1,0 +1,198 @@
+<html>
+	<meta charset="utf-8">
+	<!-- <link rel="stylesheet" href="main.css" /> -->
+	<link rel="stylesheet" href="tailwind.css" />
+	<script src="alpine.js"></script>
+
+	<style>
+		@font-face{
+		  font-family: 'Yanone Kaffeesatz';
+		  src: url('fonts/YanoneKaffeesatz-Regular.ttf');
+		  font-weight: normal;
+		}
+	</style>
+
+	<body x-data="data()" x-init="init()">
+		<div class="h-screen bg-gray-900 text-white flex flex-col items-center justify-center text-center">
+			<div x-show="!question">
+				<h1 class="text-4xl max-w-2xl leading-normal mb-12">
+					No question has been set
+				</h1>
+				<div class="mt-20">
+					<button class="mx-auto font-semibold px-8 py-3 rounded-full border-2 border-white border-opacity-25 mb-4 flex items-center bg-white text-purple-900 focus:outline-none"
+						@click="nextQuestion"
+					>
+						Next Question
+					</button>
+				</div>
+			</div>
+
+			<template x-if="question">
+				<div>
+					<h1 class="text-4xl max-w-2xl leading-normal mb-12"
+						x-text="question"
+					>
+					</h1>
+					
+					<div class="text-xl font-semibold max-w-lg mx-auto">
+						<template x-for="(answer, index) in answers">
+							<div class="overflow-hidden border-2 border-white border-opacity-25 mb-4 flex items-center">
+								<span class="py-3 border-r-2 border-white border-opacity-25 px-5 mr-5" 
+									:class="{'bg-white bg-opacity-10 text-red-500': correctAnswer == ['A', 'B', 'C', 'D'][index]}"
+									x-text="['A', 'B', 'C', 'D'][index] + '.'"></span>
+								<span class="py-3 mr-5" x-text="answer"></span>
+							</div>
+						</template>
+					</div>
+	
+					<div class="mt-20">
+						<button class="mx-auto font-semibold px-8 py-3 rounded-full border-2 border-white border-opacity-25 mb-4 flex items-center bg-white text-purple-900 focus:outline-none"
+							@click="nextQuestion"
+						>
+							Next Question
+						</button>
+
+						<button class="mt-8 mx-auto font-semibold px-8 py-3 rounded-full border-none border-white border-opacity-25 mb-4 flex items-center bg-transparent text-white underline focus:outline-none"
+							@click="question = correctAnswer"
+						>
+							Show Answer
+						</button>
+					</div>
+				</div>
+			</template>
+		</div>
+
+		<div class="fixed top-6 right-6 py-3 px-5 border-2 border-white border-opacity-25 bg-white text-black rounded flex items-center"
+			:class="{'opacity-0': !buzzedTeam}"
+		>
+			<span class="font-bold mr-2" x-text="`Team ${buzzedTeam}`"></span> Buzzed
+		</div>
+
+		<div class="fixed top-6 right-6 py-3 px-5 border-2 border-white border-opacity-25 bg-white text-black rounded flex items-center"
+			:class="{'opacity-0': !hintTeam}"
+		>
+			<span class="font-bold mr-2" x-text="`Team ${hintTeam}`"></span> Requested Hint
+		</div>
+
+		<audio id="buzzer" src="buzzer.mp3" preload></audio>
+		
+		<script src="socket.io.js"></script>
+		<!-- <script src="qrcode.min.js"></script> -->
+
+		
+		<script>
+			const buzzer = document.querySelector("#buzzer");
+			const curWords = document.querySelector("#curWords");
+			const timeLeft = document.querySelector("#timeLeft");
+			const scoreBoard = document.querySelector("#scoreBoard");
+
+			let socket, full_ip, audio = document.querySelector('audio');
+
+			// var findIP = new Promise(r=>{var w=window,a=new (w.RTCPeerConnection||w.mozRTCPeerConnection||w.webkitRTCPeerConnection)({iceServers:[]}),b=()=>{};a.createDataChannel("");a.createOffer(c=>a.setLocalDescription(c,b,b),b);a.onicecandidate=c=>{try{c.candidate.candidate.match(/([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g).forEach(r)}catch(e){}}})
+			// findIP.then(ip => (init(ip))).catch(e => console.error(e))
+			init("192.168.1.179");
+
+			function playBuzzer(){
+				buzzer.currentTime = 0;
+				buzzer.play();
+			}
+
+			function init(ip){
+				//full_ip = 'http://' + ip + ':5000';
+				// full_ip = "http://http://192.168.1.179/:5000";
+				console.log("Full ip: ", ip);
+				console.log(full_ip);
+				socket = io.connect(full_ip);
+
+				console.log("Init");
+
+				// new QRCode(document.querySelector("#qrCode"), {
+				// 	text: full_ip,
+				// 	width: 250,
+				// 	height: 250,
+				// });
+
+				// socket.on('NEW_USER', function(id){
+				// 	console.log("A new user joined in: ", id);
+				// });
+				
+				// socket.on('USER_LEFT', function(id){
+				// 	console.log("A user has left: ", id);
+				// });
+				
+				// socket.on('game-changed', function({currentWords, timeLeft, scores}){
+				// 	console.log("New words", words);
+				// 	curWords.innerHTML = "";
+				// 	currentWords.forEach((word, index) => {
+				// 		const h1 = document.createElement('h1');
+				// 		h1.innerText = word.word;
+				// 		h1.className = word.played ? 'played' : '';
+				// 		h1.onclick = function(){
+				// 			socket.emit('wordPlayed', index);
+				// 		}
+				// 		curWords.appendChild(h1);
+				// 	});
+
+				// 	timeLeft.innerText = timeLeft + " seconds";
+				// 	scoreBoard.innerText = scores.join(", ");
+
+				// 	if(timeLeft == 0)
+				// 		playBuzzer();
+				// });
+				
+				// socket.on('time', function(time){
+				// 	console.log("New Time", time);
+				// 	timeLeft.innerText = time + " seconds";
+				// });
+			}
+
+			function nextWords() {
+				socket.emit('nextWords');
+			}
+			
+			function restartTime() {
+				socket.emit('restartTime');
+			}
+
+
+			function data(){
+				return {
+					question: null,
+					// question: "Which of the following is not one of the 6 paradigms of human interactions?",
+					answers: [
+						"Win-win",
+						"No-lose",
+						"Lose-win",
+						"No-deal",
+					],
+					correctAnswer: 'B',
+					hintTeam: null,
+					buzzedTeam: null,
+					init(){
+						socket.on('buzz', (buzzedTeam) => {
+							if(this.buzzedTeam) return;
+
+							this.buzzedTeam = buzzedTeam;
+							playBuzzer();
+						});
+
+						socket.on('hint', (buzzedTeam) => {
+							this.hintTeam = buzzedTeam;
+						});
+
+						socket.on('new-question', (question) => {
+							this.question = question['word'].replace(/[aeiou]/gi, '_').toUpperCase();
+							this.answers = [];
+							this.correctAnswer = question['word'].toUpperCase();
+							this.hintTeam = null;
+						});
+					},
+					nextQuestion(){
+						this.buzzedTeam = null;
+						socket.emit('next-question');
+					},
+				}
+			}
+		</script>
+	</body>
+</html>
